@@ -43,3 +43,6 @@ agent/
 # Added by Lens Studio (LEAF plugin)
 leaf_plugin_settings.json
 .virtual-scene.json
+
+# Lens Studio ships an LFS .gitattributes; this repo stores assets as normal blobs
+.gitattributes
