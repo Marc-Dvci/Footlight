@@ -1,0 +1,59 @@
+- !<AssetImportMetadata/98dddf6c-4dbe-4701-8e15-aeceabd2917c>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 65692011-599f-4cff-9115-28c2d976e798
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 65692011-599f-4cff-9115-28c2d976e798
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 036b9ee6-799a-4633-bfff-a9c236938c1c
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/036b9ee6-799a-4633-bfff-a9c236938c1c>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 4d7cc73a-f658-4bbb-a1c7-d4e16f18ccf6
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    accentColor: false
+    camera: false
+    followSeconds: false
+    textColor: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - camera: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      textColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      accentColor: !<Vec4> {x: 1.000000, y: 0.784000, z: 0.392000, w: 1.000000}
+      followSeconds: 0.600000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Footlight UI: pill, main card, setup card, Today card"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @input SceneObject camera {"hint":"The world camera (head pose)"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input vec4 textColor = {1,1,1,1} {"hint":"Text colour on the panels (keep light: the display is additive)", "widget":"color"}'
+    - '// @input vec4 accentColor = {1,0.784,0.392,1} {"hint":"Accent colour for values", "widget":"color"}'
+    - '// @input float followSeconds = 0.6 {"hint":"Seconds for a lazily-following panel to catch up", "widget":"slider", "min":0.1, "max":2, "step":0.05}'
+    - '// @ui {"widget":"group_end"}'

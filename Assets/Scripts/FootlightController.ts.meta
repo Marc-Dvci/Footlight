@@ -1,0 +1,71 @@
+- !<AssetImportMetadata/75232cf4-0583-4381-8008-96c6f8e884f8>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 1c09e8d9-48e9-44a5-8adb-aac5831161ad
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 1c09e8d9-48e9-44a5-8adb-aac5831161ad
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 729980d4-819e-44c7-bb83-fcf7a97dc36c
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/729980d4-819e-44c7-bb83-fcf7a97dc36c>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 38c411ba-ba81-4509-b47e-3f71de4f9ce2
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    beatVolume: false
+    camera: false
+    clickTrack: false
+    eyeHeightCm: false
+    glowMaterial: false
+    previewHome: false
+    ui: false
+    verbose: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - camera: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      glowMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      clickTrack: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      ui: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      previewHome: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      eyeHeightCm: !<float> 160.000000
+      beatVolume: 0.600000
+      verbose: true
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"Footlight: floor cue lines and beat on a freezing of gait"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @input SceneObject camera {"hint":"The world camera object (head pose)"}'
+    - '// @input Asset.Material glowMaterial {"hint":"Base material for every glowing floor visual (Unlit, textured, normal blend)"}'
+    - '// @input Asset.AudioTrackAsset clickTrack {"hint":"The beat: a quiet wooden click"}'
+    - '// @input AssignableType_1 ui {"hint":"Panels"}'
+    - '// @input SceneObject previewHome {"hint":"Stand-in home for the preview; hidden on device"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float eyeHeightCm = 160 {"hint":"Eye height above the floor, used until the floor is found (cm)"}'
+    - '// @input float beatVolume = 0.6 {"hint":"Beat volume", "widget":"slider", "min":0, "max":1, "step":0.05}'
+    - '// @input bool verbose = true {"hint":"Log engine events to the console"}'
+    - '// @ui {"widget":"group_end"}'

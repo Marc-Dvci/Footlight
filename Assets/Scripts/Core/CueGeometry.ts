@@ -36,7 +36,7 @@ export const DEFAULT_CUES: CueConfig = {
   firstGapCm: 10,
   lineCount: 4,
   lineWidthCm: 60,
-  pastDoorCm: 60,
+  pastDoorCm: 110,
   turnRadiusCm: 55,
   maxLines: 7,
 };

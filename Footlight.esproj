@@ -15,7 +15,7 @@ metaInfo:
     []
   lensName: SpecsExamples
   lensDescriptors:
-    []
+    - AI_MUTATED
   lensApplicableContext:
     - live_camera
     - reply_camera
