@@ -52,7 +52,7 @@ const CONTROL_Z_LIFT = 0.05
 // Panel distances and sizes from the brief (cm).
 const MAIN_DIST = 60
 const SETUP_DIST = 70
-const TODAY_DIST = 60
+const TODAY_DIST = 65
 // Offsets are in view space. SPECS shows about 32 x 37 degrees, so panels sit near the centre of
 // the gaze, a little low; the setup card sits high so the floor reticle at the centre stays visible.
 const PANEL_DROP = 4
@@ -460,7 +460,7 @@ export class FootlightUI extends BaseScriptComponent {
 
   private buildTodayCard(): SceneObject {
     const W = 34
-    const H = 25
+    const H = 29.5
     const d = TODAY_DIST
     const {root, content} = this.panel("TodayCard", W, H, TODAY_DIST)
     const col = this.flexColumn(content, W, H, {gap: 0.9, padX: 1.6, padY: 1.4})
