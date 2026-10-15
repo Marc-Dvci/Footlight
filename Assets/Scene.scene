@@ -7,8 +7,8 @@
     - !<own> d3a80493-354a-4f37-b33e-992d4ad65ce2
     - !<own> 5ce39e8a-0027-4b9f-9094-600e24539270
     - !<own> 47ddf908-8350-41b9-b754-890c1b706274
-    - !<own> 51a765b1-fbdc-437f-8e18-7898e37ba5c5
     - !<own> b984ae62-7082-4d77-9690-e72406de6612
+    - !<own> 4f602140-2e3a-4954-b648-509930b2aa87
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -697,22 +697,6 @@
   BlendNormals: false
   BlendShapes:
     {}
-- !<ScriptComponent/29b557e2-6cba-41c4-89ff-da04ad0d756a>
-  PrefabRemaps:
-    []
-  Name: AgentInspectScript
-  Enabled: true
-  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/2a9cbb22-65a9-4226-a8de-a5075565391e>
   PrefabRemaps:
     []
@@ -993,6 +977,22 @@
     - !<own> d0b4a412-348e-47fb-8e65-5018d89224a0
   Components:
     []
+- !<SceneObject/4f602140-2e3a-4954-b648-509930b2aa87>
+  PrefabRemaps:
+    []
+  Name: AiPreviewAgent Handler
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> e210fdbf-b902-4962-a6d7-278fb41a6d9a
+    - !<own> b521631a-720f-4fa7-a52c-745d19b3aec2
 - !<RenderMeshVisual/50f4fd5b-c49d-4a18-9d97-60df92a6d72d>
   PrefabRemaps:
     []
@@ -1013,21 +1013,6 @@
   BlendNormals: false
   BlendShapes:
     {}
-- !<SceneObject/51a765b1-fbdc-437f-8e18-7898e37ba5c5>
-  PrefabRemaps:
-    []
-  Name: AiPreviewAgent Handler
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> 29b557e2-6cba-41c4-89ff-da04ad0d756a
 - !<RenderMeshVisual/51baf45e-e026-46f6-9844-b32d8ca87797>
   PrefabRemaps:
     []
@@ -2130,6 +2115,22 @@
     - !<own> 7317df02-cf35-4847-92df-8da0c5241633
   Components:
     []
+- !<ScriptComponent/b521631a-720f-4fa7-a52c-745d19b3aec2>
+  PrefabRemaps:
+    []
+  Name: AgentInteractScript
+  Enabled: true
+  ScriptAsset: !<reference> 29091811-e792-46be-bfa4-28ddec5f11be
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<ScriptComponent/b680db86-f262-4174-b371-feabd44e62d5>
   PrefabRemaps:
     []
@@ -2923,6 +2924,22 @@
       handOccluderMaterial: !<reference.Material> 5d5c762b-f0dd-4c06-b76f-bcb8f8fb525f
       overrides:
         []
+  ScriptTypes:
+    "":
+      {}
+- !<ScriptComponent/e210fdbf-b902-4962-a6d7-278fb41a6d9a>
+  PrefabRemaps:
+    []
+  Name: AgentInspectScript
+  Enabled: true
+  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
   ScriptTypes:
     "":
       {}

@@ -99,7 +99,10 @@ export class FootlightController extends BaseScriptComponent {
   private ringTex: Texture
 
   onAwake(): void {
-    this.engine.setSpots(DEFAULT_SPOTS)
+    // The default spots belong to the stand-in home; in any other room the carer marks them.
+    if (this.previewHome && this.previewHome.isEnabledInHierarchy) {
+      this.engine.setSpots(DEFAULT_SPOTS)
+    }
     this.camTr = this.camera.getTransform()
     this.cam = this.camera.getComponent("Component.Camera") as Camera
     this.buildVisuals()

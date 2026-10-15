@@ -53,7 +53,11 @@ const CONTROL_Z_LIFT = 0.05
 const MAIN_DIST = 60
 const SETUP_DIST = 70
 const TODAY_DIST = 70
-const CHEST_DROP = 30 // chest height below the eyes
+// Offsets are in view space. SPECS shows about 32 x 37 degrees, so panels sit near the centre of
+// the gaze, a little low; the setup card sits high so the floor reticle at the centre stays visible.
+const PANEL_DROP = 4
+const SETUP_DROP = -8
+const SETUP_SCALE = 0.8
 
 export type CardName = "none" | "main" | "setup" | "today"
 
@@ -286,23 +290,28 @@ export class FootlightUI extends BaseScriptComponent {
 
   // ── Placement ────────────────────────────────────────────────────────────
 
-  private headBasis(): {head: vec3; fwd: vec3; right: vec3} {
+  /** Gaze basis: full look direction (pitch limited to -45..+15 deg), level right, and view up. */
+  private headBasis(): {head: vec3; fwd: vec3; right: vec3; up: vec3} {
     const tr = this.camera.getTransform()
     const head = tr.getWorldPosition()
     const back = tr.forward
-    let fwd = new vec3(-back.x, 0, -back.z)
-    if (fwd.length < 1e-3) {
-      fwd = new vec3(0, 0, -1)
+    let flat = new vec3(-back.x, 0, -back.z)
+    if (flat.length < 1e-3) {
+      flat = new vec3(0, 0, -1)
     }
-    fwd = fwd.normalize()
-    const right = new vec3(-fwd.z, 0, fwd.x)
-    return {head: head, fwd: fwd, right: right}
+    flat = flat.normalize()
+    const pitch = Math.max(-45, Math.min(15, Math.asin(Math.max(-1, Math.min(1, -back.y))) * (180 / Math.PI)))
+    const pr = (pitch * Math.PI) / 180
+    const fwd = flat.uniformScale(Math.cos(pr)).add(new vec3(0, Math.sin(pr), 0))
+    const right = new vec3(-flat.z, 0, flat.x)
+    const up = right.cross(fwd).normalize()
+    return {head: head, fwd: fwd, right: right, up: up}
   }
 
   private targetFor(o: SceneObject): vec3 {
     const f = this.follow.get(o)
     const b = this.headBasis()
-    return b.head.add(b.fwd.uniformScale(f.dist)).add(b.right.uniformScale(f.right)).add(new vec3(0, -f.drop, 0))
+    return b.head.add(b.fwd.uniformScale(f.dist)).add(b.right.uniformScale(f.right)).add(b.up.uniformScale(-f.drop))
   }
 
   private placeNow(o: SceneObject): void {
@@ -349,7 +358,7 @@ export class FootlightUI extends BaseScriptComponent {
   private buildPill(): SceneObject {
     const root = this.obj(this.sceneObject, "FootlightPill")
     root.createComponent("Component.Canvas")
-    this.follow.set(root, {pos: vec3.zero(), target: vec3.zero(), dist: 55, right: 25, drop: 38})
+    this.follow.set(root, {pos: vec3.zero(), target: vec3.zero(), dist: 55, right: 9, drop: 11})
     const btnObj = this.obj(root, "PillButton")
     const btn = btnObj.createComponent(Button.getTypeName()) as Button
     ;(btn as any)._themeOverride = "SnapOS2"
@@ -390,7 +399,8 @@ export class FootlightUI extends BaseScriptComponent {
     const W = 42
     const H = 31
     const d = SETUP_DIST
-    const {root, content} = this.panel("SetupCard", W, H, SETUP_DIST, -24)
+    const {root, content} = this.panel("SetupCard", W, H, SETUP_DIST, 0, SETUP_DROP)
+    root.getTransform().setLocalScale(vec3.one().uniformScale(SETUP_SCALE))
     const col = this.flexColumn(content, W, H, {gap: 0.8, padX: 1.5, padY: 1.2})
     this.flexChild(col, {w: W - 3, h: 2.4}, (c) => this.text(c, "Set up home", "HeadlineXL", d, W - 3, this.textColor))
     this.flexChild(col, {w: W - 3, h: 1.8}, (c) => {
@@ -505,10 +515,10 @@ export class FootlightUI extends BaseScriptComponent {
 
   // ── Composition helpers ──────────────────────────────────────────────────
 
-  private panel(name: string, w: number, h: number, dist: number, right: number = 0): {root: SceneObject; content: SceneObject} {
+  private panel(name: string, w: number, h: number, dist: number, right: number = 0, drop: number = PANEL_DROP): {root: SceneObject; content: SceneObject} {
     const root = this.obj(this.sceneObject, name)
     root.createComponent("Component.Canvas")
-    this.follow.set(root, {pos: vec3.zero(), target: vec3.zero(), dist: dist, right: right, drop: CHEST_DROP})
+    this.follow.set(root, {pos: vec3.zero(), target: vec3.zero(), dist: dist, right: right, drop: drop})
     const plateObj = this.obj(root, name + "Plate")
     const plate = plateObj.createComponent(BackPlate.getTypeName()) as BackPlate
     plate.style = "dark"

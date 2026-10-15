@@ -38,7 +38,8 @@ export class DoorwayFreezeScenario extends Scenario {
     expect(p0.y - c.floorHeight).toBeCloseTo(0.5, 2)
 
     // Square through the doorway: every line lies parallel to the door wall (across the -z axis),
-    // centred on the door axis, from before the door plane to no more than 60 cm past it.
+    // centred on the door axis, from before the door plane to no more than pastDoorCm past it.
+    const pastDoor = c.engine.getCueConfig().pastDoorCm
     let before = 0
     let after = 0
     for (let i = 0; i < plan.lines.length; i++) {
@@ -52,7 +53,7 @@ export class DoorwayFreezeScenario extends Scenario {
       } else {
         after++
       }
-      expect(l.center.z >= DOOR_Z - 60 - 0.01, "line " + i + " at most 60 cm past the door").toBe(true)
+      expect(l.center.z >= DOOR_Z - pastDoor - 0.01, "line " + i + " at most " + pastDoor + " cm past the door").toBe(true)
       if (i > 0) {
         expect(plan.lines[i - 1].center.z - l.center.z).toBeCloseTo(45, 1)
       }
