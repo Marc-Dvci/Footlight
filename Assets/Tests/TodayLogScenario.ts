@@ -40,7 +40,7 @@ export class TodayLogScenario extends Scenario {
     const text = c.ui.todayText
     report("C5 Today card:\n" + text)
     expect(text.indexOf("Bathroom door") >= 0, "Today card names Bathroom door").toBe(true)
-    expect(text.indexOf("Bathroom door   " + d.toFixed(1) + " s") >= 0, "Today card lists the door freeze with its duration " + d.toFixed(1) + " s").toBe(true)
+    expect(text.indexOf("Bathroom door   1 freeze, longest " + d.toFixed(1) + " s") >= 0, "Today card lists the door freeze with its duration " + d.toFixed(1) + " s").toBe(true)
     expect(text.indexOf("Most at: Bathroom door.") >= 0, "summary line names the door").toBe(true)
 
     await ix.trigger(interactable("CloseButton"))

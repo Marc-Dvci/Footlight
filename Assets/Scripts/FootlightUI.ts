@@ -52,7 +52,7 @@ const CONTROL_Z_LIFT = 0.05
 // Panel distances and sizes from the brief (cm).
 const MAIN_DIST = 60
 const SETUP_DIST = 70
-const TODAY_DIST = 70
+const TODAY_DIST = 60
 // Offsets are in view space. SPECS shows about 32 x 37 degrees, so panels sit near the centre of
 // the gaze, a little low; the setup card sits high so the floor reticle at the centre stays visible.
 const PANEL_DROP = 4
@@ -63,9 +63,10 @@ export type CardName = "none" | "main" | "setup" | "today"
 
 export interface TodayView {
   summary: string // "3 freezes this session. Longest 4.2 s. Most at: Bathroom door."
-  stats: string // "Freezes 3   Longest 4.2 s   Median 2.1 s"
-  spots: string[] // "Bathroom door  2 freezes, longest 4.2 s"
-  recent: string[] // "1. Bathroom door  2.3 s"
+  freezes: string // "3"
+  longest: string // "4.2 s"
+  median: string // "2.1 s"
+  spots: string[] // "Bathroom door   2 freezes, longest 4.2 s"
 }
 
 /**
@@ -152,9 +153,8 @@ export class FootlightUI extends BaseScriptComponent {
   private beatText: Text
   private spotCountText: Text
   private todaySummary: Text
-  private todayStats: Text
+  private todayTiles: Text[] = []
   private todaySpots: Text
-  private todayRecent: Text
   private mapRoot: SceneObject
 
   // Lazy follow state per panel.
@@ -235,14 +235,15 @@ export class FootlightUI extends BaseScriptComponent {
 
   showToday(v: TodayView): void {
     this.todaySummary.text = v.summary
-    this.todayStats.text = v.stats
-    this.todaySpots.text = v.spots.length ? v.spots.join("\n") : "No spots marked."
-    this.todayRecent.text = v.recent.length ? v.recent.join("\n") : "No freezes yet."
+    this.todayTiles[0].text = v.freezes
+    this.todayTiles[1].text = v.longest
+    this.todayTiles[2].text = v.median
+    this.todaySpots.text = v.spots.length ? v.spots.join("\n") : "No freezes yet."
   }
 
   /** Everything the Today card shows, as text (for tests and logs). */
   get todayText(): string {
-    return [this.todaySummary.text, this.todayStats.text, this.todaySpots.text, this.todayRecent.text].join("\n")
+    return [this.todaySummary.text, this.todayTiles.map((t) => t.text).join(" "), this.todaySpots.text].join("\n")
   }
 
   get stepLabel(): string {
@@ -458,43 +459,38 @@ export class FootlightUI extends BaseScriptComponent {
   }
 
   private buildTodayCard(): SceneObject {
-    const W = 36
-    const H = 26
+    const W = 34
+    const H = 25
     const d = TODAY_DIST
     const {root, content} = this.panel("TodayCard", W, H, TODAY_DIST)
-    const col = this.flexColumn(content, W, H, {gap: 0.6, padX: 1.5, padY: 1.2})
-    this.flexChild(col, {w: W - 3, h: 2.6}, (rowObj) => {
-      const row = this.flexRow(rowObj, W - 3, 2.6, {justify: FlexJustify.SpaceBetween, align: FlexAlign.Center})
-      this.flexChild(row, {w: 20, h: 2.6}, (c) => this.text(c, "Today", "HeadlineXL", d, 20, this.textColor, true))
+    const col = this.flexColumn(content, W, H, {gap: 0.9, padX: 1.6, padY: 1.4})
+    this.flexChild(col, {w: W - 3.2, h: 2.4}, (c) => this.text(c, "Today", "HeadlineXL", d, W - 3.2, this.textColor, true))
+    this.flexChild(col, {w: W - 3.2, h: 3.0}, (c) => {
+      this.todaySummary = this.text(c, "No freezes this session.", "Headline2", d, W - 3.2, this.accentColor, true)
     })
-    this.flexChild(col, {w: W - 3, h: 3.2}, (c) => {
-      this.todaySummary = this.text(c, "No freezes this session.", "Subheadline", d, W - 3, this.accentColor, true)
-      this.todaySummary.verticalAlignment = VerticalAlignment.Center
-    })
-    this.flexChild(col, {w: W - 3, h: 1.8}, (c) => {
-      this.todayStats = this.text(c, "Freezes 0", "Body", d, W - 3, this.textColor, true)
-    })
-    this.flexChild(col, {w: W - 3, h: 11.2}, (rowObj) => {
-      const row = this.flexRow(rowObj, W - 3, 11.2, {gap: 1.0, align: FlexAlign.Start})
-      this.flexChild(row, {w: 21, h: 11.2}, (lc) => {
-        const lists = this.flexColumn(lc, 21, 11.2, {gap: 0.4})
-        this.flexChild(lists, {w: 21, h: 5.2}, (c) => {
-          this.todaySpots = this.text(c, "", "Body", d, 21, this.textColor, true)
-          this.todaySpots.verticalAlignment = VerticalAlignment.Top
+    // Three stat tiles: freezes, longest, median.
+    this.flexChild(col, {w: W - 3.2, h: 6.4}, (rowObj) => {
+      const row = this.flexRow(rowObj, W - 3.2, 6.4, {gap: 0.8, justify: FlexJustify.Center, align: FlexAlign.Center})
+      const tiles: Text[] = []
+      for (const label of ["freezes", "longest", "median"]) {
+        this.flexChild(row, {w: 9.8, h: 6.4}, (tc) => {
+          const tile = this.flexColumn(tc, 9.8, 6.4, {gap: 0.1, justify: FlexJustify.Center, align: FlexAlign.Center})
+          this.flexChild(tile, {w: 9.8, h: 3.4}, (c) => tiles.push(this.text(c, "0", "Title2", d, 9.8, this.accentColor)))
+          this.flexChild(tile, {w: 9.8, h: 1.8}, (c) => this.text(c, label, "Subheadline", d, 9.8, new vec4(1, 1, 1, 0.75)))
         })
-        this.flexChild(lists, {w: 21, h: 5.6}, (c) => {
-          this.todayRecent = this.text(c, "", "Body", d, 21, new vec4(1, 1, 1, 0.7), true)
-          this.todayRecent.verticalAlignment = VerticalAlignment.Top
-        })
-      })
-      this.flexChild(row, {w: 11, h: 11}, (mc) => {
-        this.mapRoot = this.obj(mc, "TodayMap", new vec3(0, 0, 0.1))
-      })
+      }
+      this.todayTiles = tiles
     })
-    this.flexChild(col, {w: W - 3, h: 6.2}, (rowObj) => {
-      const row = this.flexRow(rowObj, W - 3, 6.2, {justify: FlexJustify.End, align: FlexAlign.Center})
-      this.flexChild(row, {w: 12, h: 6.2}, (c) => this.textButton(c, "Close", 12, 6.2, d, "Headline1", () => this.openCard("none")))
+    this.flexChild(col, {w: W - 3.2, h: 6.0}, (c) => {
+      this.todaySpots = this.text(c, "", "Headline2", d, W - 3.2, this.textColor, true)
+      this.todaySpots.verticalAlignment = VerticalAlignment.Top
+      this.todaySpots.layoutRect = Rect.create(-(W - 3.2) / 2, (W - 3.2) / 2, -3, 3)
     })
+    this.flexChild(col, {w: W - 3.2, h: 4.6}, (rowObj) => {
+      const row = this.flexRow(rowObj, W - 3.2, 4.6, {justify: FlexJustify.End, align: FlexAlign.Center})
+      this.flexChild(row, {w: 11, h: 4.6}, (c) => this.textButton(c, "Close", 11, 4.6, d, "Headline1", () => this.openCard("none")))
+    })
+    this.mapRoot = this.obj(root, "TodayMap", new vec3(0, -100000, 0))
     return root
   }
 

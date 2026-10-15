@@ -32,7 +32,9 @@ export class FootlightEngine {
   private t0 = -1;
   private lastPose: Pose | null = null;
   private lastFacing: Vec2 = { x: 0, z: -1 };
+  private lastHeadDir: Vec2 = { x: 0, z: -1 };
   private hasWalkDir = false;
+  private lastCueSpotId: string | null = null;
 
   constructor(opts?: EngineOptions) {
     const o = opts || {};
@@ -66,12 +68,12 @@ export class FootlightEngine {
     return this.t0 < 0 ? 0 : t - this.t0;
   }
 
-  /** The pinch: cues at once from wherever the person stands. */
+  /** The pinch: cues at once from wherever the person stands, toward where the head points. */
   pinch(t: number): EngineFrame {
     const at = this.lastPose ? floorOf(this.lastPose) : { x: 0, z: 0 };
     const spot = spotAt(at, this.spots);
     const ev = this.detector.forceFreeze(t, at, spot ? spot.id : null);
-    this.startCue(ev, this.lastFacing, spot, t);
+    this.startCue(ev, this.lastHeadDir, spot, t);
     const frame = this.sequencer.update(at, t, false);
     return this.wrap(frame, "frozen", 0, spot, ev, null, true);
   }
@@ -87,12 +89,15 @@ export class FootlightEngine {
     const at = floorOf(p);
     const spot = spotAt(at, this.spots);
     const facing = this.walkingDirection(p, dirOfYaw(facingYaw));
+    this.lastHeadDir = dirOfYaw(facingYaw);
     this.lastPose = p;
     this.lastFacing = facing;
 
     const d = this.detector.update(p, spot ? spot.id : null);
     let newPlan = false;
-    if (d.freeze && (this.sequencer.canAutoCue(p.t) || this.sequencer.getState() === "fading")) {
+    // The cooldown stops repeat cues in the same place; a freeze at another spot always gets lines.
+    const newSpot = spot !== null && spot.id !== this.lastCueSpotId;
+    if (d.freeze && (this.sequencer.canAutoCue(p.t) || this.sequencer.getState() === "fading" || newSpot)) {
       this.startCue(d.freeze, facing, spot, p.t);
       newPlan = true;
     } else if (d.freeze) {
@@ -107,6 +112,7 @@ export class FootlightEngine {
   }
 
   private startCue(ev: FreezeEvent, facing: Vec2, spot: FreezeSpot | null, t: number): void {
+    this.lastCueSpotId = spot ? spot.id : null;
     const plan = planCues(ev.at, facing, spot, this.cues);
     this.sequencer.show(plan, t);
     this.log.begin(this.sessionTime(t), ev.cause, ev.spotId, spot ? spot.label : "Open floor");

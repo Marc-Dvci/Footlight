@@ -418,19 +418,26 @@ export class FootlightController extends BaseScriptComponent {
     this.beatObj.getTransform().setWorldPosition(new vec3(head.x, this.floorY + 10, head.z))
   }
 
-  /** Shown only while lines exist and the first uncrossed line is out of view. */
+  /** Shown only while lines exist and none of the uncrossed lines is in view. */
   private updateChevron(f: EngineFrame): void {
     let target: vec3 | null = null
+    let anyVisible = false
     if (f.plan && f.state !== "hidden") {
       for (let i = 0; i < f.lines.length && i < f.plan.lines.length; i++) {
-        if (!f.lines[i].crossed) {
-          const c = f.plan.lines[i].center
-          target = new vec3(c.x, this.floorY + FLOOR_LIFT_CM, c.z)
-          break
+        if (f.lines[i].crossed) {
+          continue
+        }
+        const c = f.plan.lines[i].center
+        const p = new vec3(c.x, this.floorY + FLOOR_LIFT_CM, c.z)
+        if (target === null) {
+          target = p
+        }
+        if (this.cam.isSphereVisible(p, 4)) {
+          anyVisible = true
         }
       }
     }
-    const show = target !== null && !this.cam.isSphereVisible(target, 4)
+    const show = target !== null && !anyVisible
     this.chevronRoot.enabled = show
     if (!show) {
       return
@@ -494,12 +501,14 @@ export class FootlightController extends BaseScriptComponent {
 
   private placeSpot(kind: SpotKind | "turnLeft" | "turnRight"): void {
     const r = this.reticlePoint()
-    const n = this.spotSerial++
+    const base = kind === "doorway" ? "Doorway" : kind === "gap" ? "Gap" : "Turn"
+    const n = this.engine.getSpots().filter((s) => s.label.indexOf(base + " ") === 0).length + 1
+    const id = "spot-" + this.spotSerial++
     let spot: FreezeSpot
     if (kind === "turnLeft" || kind === "turnRight") {
       spot = {
-        id: "spot-" + n,
-        label: (kind === "turnLeft" ? "Turn left " : "Turn right ") + n,
+        id: id,
+        label: base + " " + n,
         kind: "turn",
         center: {x: r.pos.x, z: r.pos.z},
         yaw: r.yaw,
@@ -508,8 +517,8 @@ export class FootlightController extends BaseScriptComponent {
       }
     } else {
       spot = {
-        id: "spot-" + n,
-        label: (kind === "doorway" ? "Doorway " : "Narrow gap ") + n,
+        id: id,
+        label: base + " " + n,
         kind: kind,
         center: {x: r.pos.x, z: r.pos.z},
         yaw: r.yaw,
@@ -570,52 +579,13 @@ export class FootlightController extends BaseScriptComponent {
     const recs = log.all()
     const view: TodayView = {
       summary: summarySentence(s),
-      stats: "Freezes " + s.freezes + "    Longest " + s.longestS.toFixed(1) + " s    Median " + s.medianS.toFixed(1) + " s",
+      freezes: String(s.freezes),
+      longest: s.longestS.toFixed(1) + " s",
+      median: s.medianS.toFixed(1) + " s",
       spots: s.bySpot.slice(0, 3).map((b) => b.label + "   " + b.count + (b.count === 1 ? " freeze" : " freezes") + ", longest " + b.longestS.toFixed(1) + " s"),
-      recent: recs
-        .slice(-3)
-        .reverse()
-        .map((r) => r.spotLabel + "   " + (r.durationS >= 0 ? r.durationS.toFixed(1) + " s" : "ongoing") + (r.cause === "pinch" ? " (pinch)" : "")),
     }
     this.ui.showToday(view)
-    this.drawTodayMap()
     this.log("Today: " + view.summary)
-  }
-
-  /** Top-down map of the spots on the Today card: rings in an 11 cm square. */
-  private drawTodayMap(): void {
-    const root = this.ui.todayMap
-    for (let i = root.getChildrenCount() - 1; i >= 0; i--) {
-      root.getChild(i).destroy()
-    }
-    const spots = this.engine.getSpots()
-    if (!spots.length) {
-      return
-    }
-    let minX = 1e9
-    let maxX = -1e9
-    let minZ = 1e9
-    let maxZ = -1e9
-    for (const s of spots) {
-      minX = Math.min(minX, s.center.x - s.radiusCm)
-      maxX = Math.max(maxX, s.center.x + s.radiusCm)
-      minZ = Math.min(minZ, s.center.z - s.radiusCm)
-      maxZ = Math.max(maxZ, s.center.z + s.radiusCm)
-    }
-    const span = Math.max(maxX - minX, maxZ - minZ, 1)
-    const k = 10.5 / span
-    const cx = (minX + maxX) / 2
-    const cz = (minZ + maxZ) / 2
-    const counts = this.engine.log.summary().bySpot
-    for (const s of spots) {
-      const g = V.makeGlow(root, "MapRing_" + s.id, this.upright, this.glowMaterial, this.ringTex)
-      const tr = g.obj.getTransform()
-      // Map: x to the right, walking direction (-z) up.
-      tr.setLocalPosition(new vec3((s.center.x - cx) * k, -(s.center.z - cz) * k, 0))
-      tr.setLocalScale(new vec3(s.radiusCm * 2 * k, s.radiusCm * 2 * k, 1))
-      const hit = counts.filter((c) => c.label === s.label).length > 0
-      V.setOpacity(g, hit ? 1 : 0.45)
-    }
   }
 
   // ── Pinch anywhere ───────────────────────────────────────────────────────

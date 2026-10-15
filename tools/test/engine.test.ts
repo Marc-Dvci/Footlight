@@ -141,6 +141,17 @@ describe("cue sequencing", () => {
     expect(frames[frames.length - 1].state).toBe("cueing");
   });
 
+  it("cues a freeze at a second spot even inside the cooldown", () => {
+    const e = new FootlightEngine();
+    const gap: FreezeSpot = { id: "gap", label: "Sofa gap", kind: "gap", center: { x: 0, z: -150 }, yaw: 0, radiusCm: 80 };
+    const turn: FreezeSpot = { id: "turn", label: "Turn", kind: "turn", center: { x: 0, z: -330 }, yaw: 0, radiusCm: 60, turnDeg: -90 };
+    e.setSpots([gap, turn]);
+    // Freeze in the gap, walk through its lines, then stop at the turn less than 2 s later.
+    const frames = run(e, [{ kind: "walk", seconds: 2.0 }, { kind: "stop", seconds: 1.5 }, { kind: "walk", seconds: 2.4, speedCmS: 70 }, { kind: "stop", seconds: 2 }]);
+    const plans = frames.filter((f) => f.newPlan).map((f) => f.plan!.mode);
+    expect(plans).toEqual(["doorway", "turn"]);
+  });
+
   it("pinch brings lines up at once, anywhere", () => {
     const e = new FootlightEngine();
     run(e, [{ kind: "stop", seconds: 1 }]);
