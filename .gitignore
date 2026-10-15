@@ -1,0 +1,22 @@
+# BEGIN Lens Studio managed Agents-Docs block
+.mcp.json
+.cursor/mcp.json
+.vscode/mcp.json
+.codex/config.toml
+.claude/settings.local.json
+ls-live-instance.json
+ls-live-instance.json.tmp
+# END Lens Studio managed Agents-Docs block
+
+# Lens Studio generated / local
+Cache/
+Workspaces/
+PluginsUserPreferences/
+Support/
+*.esproj.*.lock
+
+# Tools
+tools/node_modules/
+tools/eval/data/
+agent/
+.claude/skills/

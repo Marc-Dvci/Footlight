@@ -1,0 +1,14 @@
+{
+  "name": "footlight-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "eval": "tsx eval/daphnet.ts"
+  },
+  "devDependencies": {
+    "tsx": "4.19.2",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  }
+}
