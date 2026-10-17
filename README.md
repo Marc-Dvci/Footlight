@@ -119,4 +119,4 @@ npx tsx eval/figures.ts && python eval/figures.py  # the two figures above (matp
 
 ## Credits and pre-existing code
 
-Lens Studio SPECS Base Template, Spectacles Interaction Kit, Spectacles UI Kit and LEAF packages (Snap). The `plan-lens` skill (Devpost, MIT). Material Symbols icons. Everything else was written during the event, from 15 October 2026.
+Lens Studio SPECS Base Template, Spectacles Interaction Kit, Spectacles UI Kit and LEAF packages (Snap). The `plan-lens` skill (Devpost, MIT). Material Symbols icons. Everything else was written during the event, from 15 October 2026, and is MIT licensed ([LICENSE](LICENSE)).
