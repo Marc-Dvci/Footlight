@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "eval": "tsx eval/daphnet.ts"
+    "eval": "tsx eval/daphnet.ts",
+    "figures": "tsx eval/figures.ts && python eval/figures.py"
   },
   "devDependencies": {
     "tsx": "4.19.2",

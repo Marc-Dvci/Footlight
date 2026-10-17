@@ -4,7 +4,7 @@
 
 Built for **Learn AR with SPECS** (Devpost Learn x Snap): planned with the Devpost `plan-lens` skill, built by Snap's CLAD agents through the Lens Studio MCP, tested with LEAF in the Lens Studio preview.
 
-Video: <VIDEO URL>
+**Video (2:25):** https://youtu.be/uxQY7PvLuNk
 
 ![Lines across the sofa gap at the moment of a freeze](docs/img/gap_lines.jpg)
 
@@ -54,6 +54,14 @@ LEAF cannot move the preview camera, so the scenarios walk through the controlle
 
 Every number on the floor is computed by plain TypeScript in `Assets/Scripts/Core`, with no Lens Studio dependency. The same files run in the Lens and in the Node tests.
 
+![Where the lines go: a doorway and a left turn, seen from above](docs/figures/cue_plan.png)
+
+*Where the lines go, seen from above, as `CueGeometry` places them. Left: the person stops 20 cm off-centre before a doorway; the first line is 22 cm ahead, the rest follow at the target step, square to the door and on through it. Right: a left turn, with marks on a 55 cm arc and two lines on the new heading.*
+
+![One freeze in a doorway, frame by frame](docs/figures/cue_timeline.png)
+
+*One freeze in a doorway, frame by frame, from `FootlightEngine` on a scripted walk. Lines appear 0.68 s after the stop, each crossed line dims, and after steady walking the rest fade. The beat runs at 100 per minute and stops two beats into the fade. Drawn by `tools/eval/figures.ts` and `tools/eval/figures.py`.*
+
 | Claim | Code | Test |
 |---|---|---|
 | A freeze is a stop after walking: 0.4 s inside a marked spot, or a 1.3 s stop with 3-8 Hz trembling of head height on open floor | [`FreezeDetector.ts`](Assets/Scripts/Core/FreezeDetector.ts) | `tools/test/engine.test.ts`: "cues within one second of stopping in a doorway spot", "does not cue a calm stop on open floor", "cues a trembling stop on open floor" |
@@ -100,6 +108,7 @@ cd tools
 npm ci
 npx vitest run           # 17 tests
 npx tsx eval/daphnet.ts  # needs the Daphnet zip extracted into tools/eval/data/
+npx tsx eval/figures.ts && python eval/figures.py  # the two figures above (matplotlib)
 ```
 
 ## Scope
