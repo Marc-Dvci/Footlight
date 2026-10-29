@@ -4,7 +4,7 @@
 
 Built for **Learn AR with SPECS** (Devpost Learn x Snap): planned with the Devpost `plan-lens` skill, built by Snap's CLAD agents through the Lens Studio MCP, tested with LEAF in the Lens Studio preview.
 
-**Video (2:25):** https://youtu.be/uxQY7PvLuNk
+**Video (2:20):** https://youtu.be/wvMXEe9thIY
 
 ![Lines across the sofa gap at the moment of a freeze](docs/img/gap_lines.jpg)
 
