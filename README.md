@@ -2,11 +2,37 @@
 
 **A SPECS Lens for people with Parkinson's who freeze mid-step.** When a freeze starts in a narrow gap, at a turn or in a doorway, Footlight draws lines on the real floor at the person's own step length and plays a beat at their walking pace. Step over the first line and keep walking. Once the walk is steady, the lines fade and the beat stops.
 
+[![Tests](https://github.com/Marc-Dvci/Footlight/actions/workflows/tests.yml/badge.svg)](https://github.com/Marc-Dvci/Footlight/actions/workflows/tests.yml)
+[![Core logic coverage: 91%](https://img.shields.io/badge/core%20logic%20coverage-91%25-brightgreen)](tools/test/engine.test.ts)
+[![LEAF done criteria: 5 of 5 pass](https://img.shields.io/badge/LEAF%20done%20criteria-5%20of%205%20pass-brightgreen)](#done-criteria-tested-with-leaf)
+[![CodeQL](https://github.com/Marc-Dvci/Footlight/actions/workflows/codeql.yml/badge.svg)](https://github.com/Marc-Dvci/Footlight/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+[![Watch the film: Footlight, the line on the floor when and where the freeze happens](docs/img/film_thumbnail.jpg)](https://www.youtube.com/watch?v=wvMXEe9thIY)
+
+**[Watch the film (2:20)](https://www.youtube.com/watch?v=wvMXEe9thIY)**: the Lens working in the Lens Studio preview, and how it was built.
+
 Built for **Learn AR with SPECS** (Devpost Learn x Snap): planned with the Devpost `plan-lens` skill, built by Snap's CLAD agents through the Lens Studio MCP, tested with LEAF in the Lens Studio preview.
 
-**Video (2:20):** https://youtu.be/wvMXEe9thIY
+<p align="center">
+  <img src="docs/gif/pinch.gif" width="270" alt="A pinch brings up three lines on the floor at once, one per step">
+  <img src="docs/gif/sofa-gap.gif" width="270" alt="He stops in the sofa gap: lines appear across it, and go as he walks through">
+  <img src="docs/gif/turn.gif" width="270" alt="At the turn, stepping marks follow a wide arc onto the new heading">
+</p>
 
-![Lines across the sofa gap at the moment of a freeze](docs/img/gap_lines.jpg)
+*Recorded in the Lens Studio preview: a pinch, a freeze in the sofa gap, and a turn.*
+
+[For judges](#for-judges) · [Why](#why) · [The experience](#the-experience) · [How it was built](#how-it-was-built) ·
+[Architecture](#architecture) · [Why it waits for a stop](#why-footlight-waits-for-a-stop) · [Run it](#run-it)
+
+## For judges
+
+| Criterion | Where it is answered |
+|---|---|
+| **Design** | [The experience](#the-experience): five moments, from the carer's setup to the Today card, and nothing on the floor while the walk is steady; [designed for a narrow view](#designed-for-a-narrow-view) |
+| **Technical Implementation** | [How it was built](#how-it-was-built): planned with `plan-lens`, built by CLAD through the Lens Studio MCP, five done criteria passing in LEAF; [architecture](#architecture): the core logic in plain TypeScript, 17 tests, 91% coverage, every claim tied to its test |
+| **Innovation/Idea** | [Why](#why): the line on the floor at the moment and in the place of the freeze, gone once the walk is steady; [why Footlight waits for a stop](#why-footlight-waits-for-a-stop), tested on the Daphnet dataset |
+| **Presentation** | [The film (2:20)](https://www.youtube.com/watch?v=wvMXEe9thIY): the Lens working end to end in the Lens Studio preview, then how it was built |
 
 ## Why
 
@@ -106,8 +132,8 @@ Trembling alone is either too noisy or too late to put lines on the floor. So Fo
 ```bash
 cd tools
 npm ci
-npx vitest run           # 17 tests
-npx tsx eval/daphnet.ts  # needs the Daphnet zip extracted into tools/eval/data/
+npx vitest run --coverage  # 17 tests; 91% of the core logic's lines, and CI fails below 85%
+npx tsx eval/daphnet.ts    # needs the Daphnet zip extracted into tools/eval/data/
 npx tsx eval/figures.ts && python eval/figures.py  # the two figures above (matplotlib)
 ```
 

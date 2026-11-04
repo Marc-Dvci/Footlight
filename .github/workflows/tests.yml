@@ -1,0 +1,45 @@
+# On every push: the core logic's tests in Node, with coverage. These are the same TypeScript files the Lens runs.
+# The Lens itself is tested with LEAF in the Lens Studio preview (README, "Done criteria").
+# Read-only: nothing here writes to the repository.
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+      - run: npm ci
+      - name: Tests, with coverage of the core logic
+        shell: bash
+        run: npx vitest run --coverage --color=false | tee vitest.log
+      - name: Summary on the run page
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Tests"
+            echo
+            grep -E "^ +Tests " vitest.log | tail -n 1 | sed 's/^ *//'
+            echo
+            echo "### Coverage of the core logic (Assets/Scripts/Core)"
+            echo
+            node -e '
+              const s = require("./coverage/coverage-summary.json");
+              const rows = Object.entries(s).filter(([k]) => k !== "total")
+                .map(([k, v]) => `| ${k.split("/").pop()} | ${v.lines.pct}% |`);
+              console.log(["| File | Lines |", "|---|---|", ...rows, `| **All** | **${s.total.lines.pct}%** |`].join("\n"));
+            '
+          } >> "$GITHUB_STEP_SUMMARY"

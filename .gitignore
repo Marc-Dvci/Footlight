@@ -37,6 +37,7 @@ Support/
 # Tools
 tools/node_modules/
 tools/eval/data/
+tools/coverage/
 agent/
 .claude/skills/
 
