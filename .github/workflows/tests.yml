@@ -24,7 +24,7 @@ jobs:
       - run: npm ci
       - name: Tests, with coverage of the core logic
         shell: bash
-        run: npx vitest run --coverage --color=false | tee vitest.log
+        run: npx vitest run --coverage | tee vitest.log
       - name: Summary on the run page
         if: always()
         shell: bash
@@ -32,14 +32,14 @@ jobs:
           {
             echo "### Tests"
             echo
-            grep -E "^ +Tests " vitest.log | tail -n 1 | sed 's/^ *//'
+            sed 's/\x1b\[[0-9;]*m//g' vitest.log | grep -E "^ *Tests +[0-9]+" | tail -n 1 | sed 's/^ *//' || true
             echo
             echo "### Coverage of the core logic (Assets/Scripts/Core)"
             echo
             node -e '
               const s = require("./coverage/coverage-summary.json");
               const rows = Object.entries(s).filter(([k]) => k !== "total")
-                .map(([k, v]) => `| ${k.split("/").pop()} | ${v.lines.pct}% |`);
+                .map(([k, v]) => `| ${k.split(/[\\/]/).pop()} | ${v.lines.pct}% |`);
               console.log(["| File | Lines |", "|---|---|", ...rows, `| **All** | **${s.total.lines.pct}%** |`].join("\n"));
             '
           } >> "$GITHUB_STEP_SUMMARY"
