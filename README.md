@@ -2,6 +2,8 @@
 
 **A SPECS Lens for people with Parkinson's who freeze mid-step.** When a freeze starts in a narrow gap, at a turn or in a doorway, Footlight draws lines on the real floor at the person's own step length and plays a beat at their walking pace. Step over the first line and keep walking. Once the walk is steady, the lines fade and the beat stops.
 
+**1st place, Learn AR with SPECS** (Devpost Learn x Snap), among 216 projects.
+
 [![Tests](https://github.com/Marc-Dvci/Footlight/actions/workflows/tests.yml/badge.svg)](https://github.com/Marc-Dvci/Footlight/actions/workflows/tests.yml)
 [![Core logic coverage: 91%](https://img.shields.io/badge/core%20logic%20coverage-91%25-brightgreen)](tools/test/engine.test.ts)
 [![LEAF done criteria: 5 of 5 pass](https://img.shields.io/badge/LEAF%20done%20criteria-5%20of%205%20pass-brightgreen)](#done-criteria-tested-with-leaf)
@@ -12,7 +14,7 @@
 
 **[Watch the film (2:20)](https://www.youtube.com/watch?v=wvMXEe9thIY)**: the Lens working in the Lens Studio preview, and how it was built.
 
-Built for **Learn AR with SPECS** (Devpost Learn x Snap): planned with the Devpost `plan-lens` skill, built by Snap's CLAD agents through the Lens Studio MCP, tested with LEAF in the Lens Studio preview.
+Planned with the Devpost `plan-lens` skill, built by Snap's CLAD agents through the Lens Studio MCP, tested with LEAF in the Lens Studio preview.
 
 <p align="center">
   <img src="docs/gif/pinch.gif" width="270" alt="A pinch brings up three lines on the floor at once, one per step">
